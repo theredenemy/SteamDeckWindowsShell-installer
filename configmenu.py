@@ -5,6 +5,10 @@ def makeinstallconfig():
     import win32con
     gitrepodefault = "https://github.com/theredenemy/SteamDeckWindowsShell"
     installdirdefault = "C:/SteamDeckShell"
+    ClientDirdefault = "C:/Program Files (x86)/Steam"
+    ClientExedefault = "steam.exe"
+    ClientExeArgdefault = "-noverifyfiles -gamepadui"
+    waitforprodefault = "steamwebhelper.exe"
     print("Welcome Text")
     gitrepo = input(f"Enter the Git Repo to clone for SteamDeckWindowsShell. default:{gitrepodefault}: ")
     if not gitrepo:
@@ -12,15 +16,52 @@ def makeinstallconfig():
     installdir = input(f"Enter Installation Directory. default:{installdirdefault}: ")
     if not installdir:
         installdir = installdirdefault
-    #ask_uac_off = input("Turn off UAC. Recommended so there no UAC Prompt every login. default:y")
+    ClientDir = input(f"Enter Launcher Directory. default:{ClientDirdefault}: ")
+    if not ClientDir:
+        ClientDir = ClientDirdefault
+    ClientExe = input(f"Enter Launcher Executable. default:{ClientExedefault}: ")
+    if not ClientExe:
+        ClientExe = ClientExedefault
+    ClientExeArg = input(f"Enter Arguments for Launcher if there is no Arguments type False. default:{ClientExeArgdefault}: ")
+    if not ClientExeArg:
+        ClientExeArg = ClientExeArgdefault
+    if ClientExeArg == "false":
+        ClientExeArg = "False"
+    waitforpro = input(f"Enter Process Name to Wait for. default:{waitforprodefault}")
+    if not waitforpro:
+        waitforpro = waitforprodefault
     ask_uac = win32ui.MessageBox("Turn off UAC. Recommended so there no UAC Prompt every login.", "Steam Deck Windows Shell Installer", win32con.MB_YESNO)
     if ask_uac == win32con.IDYES:
-        uacoff = True
+        uacoff = "True"
     elif ask_uac == win32con.IDNO:
-        uacoff = False
+        uacoff = "False"
     else:
-        uacoff = True
+        uacoff = "True"
     
+    print("Making Install Config...")
+    config_file = configparser.ConfigParser()
+
+    config_file.add_section("Install")
+
+    config_file.set("Install", "gitrepo", gitrepo)
+    config_file.set("Install", "installdir", installdir)
+    config_file.set("Install", "uacoff", uacoff)
+    
+
+    config_file.add_section("SteamWindowsShell")
+
+    config_file.set("SteamWindowsShell", "ClientDir", ClientDir)
+    config_file.set("SteamWindowsShell", "ClientExe", ClientExe)
+    config_file.set("SteamWindowsShell", "ClientExeArg", ClientExeArg)
+    config_file.set("SteamWindowsShell", "waitforpro", waitforpro)
+
+    if os.path.isfile("SteamDeckShellInstall.ini") == True:
+        os.remove("SteamDeckShellInstall.ini")
+
+    with open(r"SteamDeckShellInstall.ini", 'w') as configfileObj:
+     config_file.write(configfileObj)
+     configfileObj.flush()
+     configfileObj.close()
 
     
     
