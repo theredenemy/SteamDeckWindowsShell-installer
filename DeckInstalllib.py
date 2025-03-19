@@ -15,6 +15,9 @@ def install(installconfig):
     import configparser
     import os
     import configHelper
+    import shutil
+    import DeckInstalllib
+    import requests
     config = configHelper.read_config(installconfig)
     ClientDir = config['SteamWindowsShell']['ClientDir']
     ClientExe = config['SteamWindowsShell']['ClientExe']
@@ -23,5 +26,11 @@ def install(installconfig):
     gitrepo = config['Install']['gitrepo']
     installdir = config['Install']['installdir']
     uacoff = config['Install']['uacoff']
+    if not shutil.which("git"):
+        git_install_url = DeckInstalllib.get_url("git-for-windows/git", "exe", "64-bit")
+        file_data = requests.get(git_install_url, allow_redirects=True)
+        open('git_install', 'wb').write(file_data.content)
+
+
 
     
