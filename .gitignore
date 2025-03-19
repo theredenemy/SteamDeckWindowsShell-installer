@@ -1,5 +1,7 @@
 /.venv
 /__pycache__
+/build
+/dist
 SteamDeckShellInstall.ini
 test.py
 test2.py
@@ -9,3 +11,4 @@ test4.py
 /installerfiles
 test5.py
 test6.py
+main.spec

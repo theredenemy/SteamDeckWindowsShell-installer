@@ -27,4 +27,6 @@ if argcheck == True:
     print(sys.argv)
 else:
     import configmenu
+    import DeckInstalllib
     configmenu.makeinstallconfig()
+    DeckInstalllib.install("SteamDeckShellInstall.ini")
