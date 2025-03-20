@@ -76,7 +76,7 @@ def install(installconfig):
         reboot = 1
     if not shutil.which("pip"):
         python_installer = DeckInstalllib.download_file(python_install_url,"python_install.exe")
-        os.system(f"{python_installer} /PrependPath=1 /InstallAllUsers=1")
+        os.system(f"{python_installer} /quiet /PrependPath=1 /InstallAllUsers=1")
         reboot = 1
     if uacoff == "True":
         os.system("reg delete HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System /v EnableLUA /f")
@@ -108,7 +108,7 @@ def install(installconfig):
         f.write(startupscript)
         f.close()
         shutil.move("startup.cmd", startup_dir)
-        win32api.ExitWindowsEx(win32con.EWX_REBOOT | win32con.EWX_FORCE, 0)
+        os.system("shutdown -r -f -t 0")
 
     os.system(f"git clone {gitrepo} {current_directory}\\{gitrepodirname}")
     if os.path.isdir(gitrepodirname) == False:
@@ -150,7 +150,8 @@ def install(installconfig):
     shutil.rmtree(installer_directory)
     setshellkey.SetAsShell(f"{installdir}\\shell.exe")
     time.sleep(2)
-    win32api.ExitWindowsEx(win32con.EWX_REBOOT | win32con.EWX_FORCE, 0)
+    os.system("shutdown -r -f -t 0")
+
 
 
 
