@@ -40,6 +40,7 @@ def install(installconfig):
     import setshellkey
     import win32api
     import win32con
+    import sys
     # Set Variables
     installerfiles_dir = "installerfiles"
     python_install_url = "https://www.python.org/ftp/python/3.13.0/python-3.13.0-amd64.exe"
@@ -55,8 +56,16 @@ def install(installconfig):
     uacoff = config['Install']['uacoff']
     AddExclusion = config['Install']['AddExclusion']
     start_dir = subprocess.getoutput('echo "%cd%"')
+    filename = os.path.basename(sys.executable)
+    reboot = 0
     
     # Start Install
+    print("Starting Installation")
+    time.sleep(3)
+    USERPROFILE = subprocess.getoutput("echo %USERPROFILE%")
+    startup_dir = f"{USERPROFILE}\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup"
+    if os.path.isfile(f"{startup_dir}\\startup.cmd") == True:
+        os.remove(f"{startup_dir}\\startup.cmd")
     if os.path.isdir(installerfiles_dir) == True:
         shutil.rmtree(installerfiles_dir)
     os.mkdir(installerfiles_dir)
@@ -64,18 +73,43 @@ def install(installconfig):
     if not shutil.which("git"):
         git_installer = DeckInstalllib.download_file(git_install_url,"git_install.exe")
         os.system(f"{git_installer} /SILENT")
-    if not shutil.which("python"):
+        reboot = 1
+    if not shutil.which("pip"):
         python_installer = DeckInstalllib.download_file(python_install_url,"python_install.exe")
-        os.system(f"{python_installer} /silent /PrependPath=1 /InstallAllUsers=1")
+        os.system(f"{python_installer} /PrependPath=1 /InstallAllUsers=1")
+        reboot = 1
+    if uacoff == "True":
+        os.system("reg delete HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System /v EnableLUA /f")
+        os.system("reg add HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System /v EnableLUA /t REG_DWORD /d 0 /f")
     time.sleep(3)
     if os.path.isdir(installdir) == True:
         shutil.rmtree(installdir)
     os.mkdir(installdir)
     current_directory = subprocess.getoutput('echo "%cd%"')
-    installer_directory = current_directory
     if AddExclusion == "True":
-        DeckInstalllib.set_defender_ExclusionPath(current_directory)
+        installer_directory = subprocess.getoutput('echo "%cd%"')
+        DeckInstalllib.set_defender_ExclusionPath(installer_directory)
         DeckInstalllib.set_defender_ExclusionPath(installdir)
+    if reboot == 1:
+        USERPROFILE = subprocess.getoutput("echo %USERPROFILE%")
+        startup_dir = f"{USERPROFILE}\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup"
+        if len(start_dir) >= 2 and start_dir[1] == ':':
+            drive = start_dir[:2]
+            rest = start_dir[2:].lstrip('\\')
+        else:
+            drive = ""
+            rest = start_dir
+        f = open("startup.cmd", "w")
+        startupscript = f'''cd / 
+        {drive}
+        cd {rest}
+        start {filename} --installconfig {installconfig}
+        '''
+        f.write(startupscript)
+        f.close()
+        shutil.move("startup.cmd", startup_dir)
+        win32api.ExitWindowsEx(win32con.EWX_REBOOT | win32con.EWX_FORCE, 0)
+
     os.system(f"git clone {gitrepo} {current_directory}\\{gitrepodirname}")
     if os.path.isdir(gitrepodirname) == False:
         print("NO DIR")
@@ -115,9 +149,7 @@ def install(installconfig):
     time.sleep(2)
     shutil.rmtree(installer_directory)
     setshellkey.SetAsShell(f"{installdir}\\shell.exe")
-    if uacoff == "True":
-        os.system("reg delete HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System /v EnableLUA")
-        os.system("reg add HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System /v EnableLUA /t REG_DWORD /d 0 /f")
+    time.sleep(2)
     win32api.ExitWindowsEx(win32con.EWX_REBOOT | win32con.EWX_FORCE, 0)
 
 

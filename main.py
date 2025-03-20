@@ -16,7 +16,7 @@ else:
     exit()
 
 try:
-    checkarg = sys.argv[1]
+    checkarg = sys.argv[2]
     argcheck = True
     checkarg = 0
 except IndexError:
@@ -25,6 +25,15 @@ except IndexError:
 
 if argcheck == True:
     print(sys.argv)
+    import argparse
+    import DeckInstalllib
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--installconfig")
+
+    args = parser.parse_args()
+    installconfig_file = args.installconfig
+    DeckInstalllib.install(installconfig_file)
 else:
     import configmenu
     import DeckInstalllib
