@@ -77,7 +77,9 @@ def install(installconfig):
         os.system(f"{git_installer} /SILENT")
         reboot = 1
     if not shutil.which("pip"):
+        print("Downloading Python")
         python_installer = DeckInstalllib.download_file(python_install_url,"python_install.exe")
+        print("Installing Python")
         os.system(f"{python_installer} /quiet /PrependPath=1 /InstallAllUsers=1 /AssociateFiles=1 /Shortcuts=1 /Include_pip=1 /Include_test=1 /Include_tools=1 /Include_doc=1 /Include_exe=1 /Include_launcher=1 /Include_tcltk=1")
         reboot = 1
     if uacoff == "True":
