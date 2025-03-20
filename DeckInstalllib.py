@@ -34,12 +34,9 @@ def install(installconfig):
     import configHelper
     import shutil
     import DeckInstalllib
-    import requests
     import time
     import subprocess
     import setshellkey
-    import win32api
-    import win32con
     import sys
     # Set Variables
     installerfiles_dir = "installerfiles"
@@ -55,7 +52,9 @@ def install(installconfig):
     installdir = config['Install']['installdir']
     uacoff = config['Install']['uacoff']
     AddExclusion = config['Install']['AddExclusion']
-    start_dir = subprocess.getoutput('echo "%cd%"')
+    start_dir_main = subprocess.getoutput('echo "%cd%"')
+    start_dir = rf'{start_dir_main}'
+    start_dir = start_dir.replace('\\', '/')
     filename = os.path.basename(sys.executable)
     reboot = 0
     
@@ -167,7 +166,7 @@ def install(installconfig):
     config_file.set("SteamWindowsShell", "ClientExeArg", ClientExeArg)
     config_file.set("SteamWindowsShell", "waitforpro", waitforpro)
 
-    with open(r"SteamWinShellconfig.ini", 'w') as configfileObj:
+    with open(rf"SteamWinShellconfig.ini", 'w') as configfileObj:
         config_file.write(configfileObj)
         configfileObj.flush()
         configfileObj.close()
