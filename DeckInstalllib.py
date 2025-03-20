@@ -148,7 +148,20 @@ def install(installconfig):
         DeckInstalllib.remove_defender_ExclusionPath(installer_directory)
     time.sleep(2)
     shutil.rmtree(installer_directory)
-    setshellkey.SetAsShell(f"{installdir}\\shell.exe")
+    os.chdir(installdir)
+    config_file = configparser.ConfigParser()
+    config_file.add_section("SteamWindowsShell")
+    config_file.set("SteamWindowsShell", "ClientDir", ClientDir)
+    config_file.set("SteamWindowsShell", "ClientExe", ClientExe)
+    config_file.set("SteamWindowsShell", "ClientExeArg", ClientExeArg)
+    config_file.set("SteamWindowsShell", "waitforpro", waitforpro)
+
+    with open(r"SteamWinShellconfig.ini", 'w') as configfileObj:
+        config_file.write(configfileObj)
+        configfileObj.flush()
+        configfileObj.close()
+    
+    setshellkey.SetAsShell(f"{installdir}/shell.exe")
     time.sleep(2)
     os.system("shutdown -r -f -t 0")
 
