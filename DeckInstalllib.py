@@ -83,6 +83,7 @@ def install(installconfig):
         os.system(f"{python_installer} /passive PrependPath=1 InstallAllUsers=1")
         reboot = 1
     if uacoff == "True":
+        print("Disabling UAC")
         os.system("reg delete HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System /v EnableLUA /f")
         os.system("reg add HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System /v EnableLUA /t REG_DWORD /d 0 /f")
     time.sleep(3)
@@ -91,10 +92,13 @@ def install(installconfig):
     os.mkdir(installdir)
     current_directory = subprocess.getoutput('echo "%cd%"')
     if AddExclusion == "True":
+        print("Adding Defender Exclusions")
         installer_directory = subprocess.getoutput('echo "%cd%"')
         DeckInstalllib.set_defender_ExclusionPath(installer_directory)
         DeckInstalllib.set_defender_ExclusionPath(installdir)
     if reboot == 1:
+        print("Restarting Windows. (Continue after Restart)")
+        time.sleep(3)
         USERPROFILE = subprocess.getoutput("echo %USERPROFILE%")
         startup_dir = f"{USERPROFILE}\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup"
         if len(start_dir) >= 2 and start_dir[1] == ':':
@@ -113,13 +117,14 @@ def install(installconfig):
         f.close()
         shutil.move("startup.cmd", startup_dir)
         os.system("shutdown -r -f -t 0")
-
+    print("Cloning Git Repository")
     os.system(f"git clone {gitrepo} {current_directory}\\{gitrepodirname}")
     if os.path.isdir(gitrepodirname) == False:
         print("NO DIR")
         return
     
     os.chdir(gitrepodirname)
+    print("Setting up Virtual Environment")
     venvdir = "venv"
     if os.path.isdir(venvdir) == False:
     
@@ -138,6 +143,7 @@ def install(installconfig):
     start /wait cmd.exe /c "pyinstaller shell.py --onefile && pyinstaller restoreshell.py --onefile"'''
     f.write(loadvenvbat)
     f.close()
+    print("compiling")
     os.system("load_venv.bat")
     time.sleep(2)
     os.chdir("dist")
@@ -167,6 +173,8 @@ def install(installconfig):
     
     setshellkey.SetAsShell(f"{installdir}/shell.exe")
     time.sleep(2)
+    print("Restarting Windows")
+    time.sleep(3)
     os.system("shutdown -r -f -t 0")
 
 
