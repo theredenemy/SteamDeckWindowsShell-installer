@@ -117,6 +117,7 @@ def install(installconfig):
         f.close()
         shutil.move("startup.cmd", startup_dir)
         os.system("shutdown -r -f -t 0")
+        return
     print("Cloning Git Repository")
     os.system(f"git clone {gitrepo} {current_directory}\\{gitrepodirname}")
     if os.path.isdir(gitrepodirname) == False:
