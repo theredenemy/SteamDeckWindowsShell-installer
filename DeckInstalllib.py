@@ -70,6 +70,7 @@ def install(installconfig):
         shutil.rmtree(installerfiles_dir)
     os.mkdir(installerfiles_dir)
     os.chdir(installerfiles_dir)
+    installer_directory = subprocess.getoutput('echo %cd%')
     if not shutil.which("git"):
         print("Downloading Git")
         git_installer = DeckInstalllib.download_file(git_install_url,"git_install.exe")
@@ -94,9 +95,9 @@ def install(installconfig):
         shutil.rmtree(installdir)
     os.mkdir(installdir)
     current_directory = subprocess.getoutput('echo "%cd%"')
+    installer_directory = subprocess.getoutput('echo "%cd%"')
     if AddExclusion == "True":
         print("Adding Defender Exclusions")
-        installer_directory = subprocess.getoutput('echo "%cd%"')
         DeckInstalllib.set_defender_ExclusionPath(installer_directory)
         DeckInstalllib.set_defender_ExclusionPath(installdir)
     if reboot == 1:
