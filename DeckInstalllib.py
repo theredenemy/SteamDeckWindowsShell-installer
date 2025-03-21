@@ -67,7 +67,7 @@ def install(installconfig):
     if os.path.isfile(f"{startup_dir}\\startup.cmd") == True:
         os.remove(f"{startup_dir}\\startup.cmd")
     if os.path.isdir(installerfiles_dir) == True:
-        shutil.rmtree(installerfiles_dir)
+        os.system(f"rd /s /q {installerfiles_dir}")
     os.mkdir(installerfiles_dir)
     os.chdir(installerfiles_dir)
     installer_directory = subprocess.getoutput('echo %cd%')
@@ -162,7 +162,7 @@ def install(installconfig):
     if AddExclusion == "True":
         DeckInstalllib.remove_defender_ExclusionPath(installer_directory)
     time.sleep(2)
-    shutil.rmtree(installerfiles_dir)
+    os.system(f"rd /s /q {installerfiles_dir}")
     os.chdir(installdir)
     config_file = configparser.ConfigParser()
     config_file.add_section("SteamWindowsShell")
