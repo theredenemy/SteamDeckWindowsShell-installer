@@ -148,7 +148,7 @@ def install(installconfig):
     start /wait cmd.exe /c "pyinstaller shell.py --onefile && pyinstaller restoreshell.py --onefile"'''
     f.write(loadvenvbat)
     f.close()
-    print("compiling")
+    print("Compiling")
     os.system("load_venv.bat")
     time.sleep(2)
     os.chdir("dist")
