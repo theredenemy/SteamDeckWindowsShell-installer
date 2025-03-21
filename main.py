@@ -1,6 +1,7 @@
 import ctypes, os
 import sys
 import time
+import subprocess
 try:
     is_admin = os.getuid() == 0
 except AttributeError:
@@ -34,5 +35,8 @@ if is_admin == True:
         DeckInstalllib.install("SteamDeckShellInstall.ini")
 
 else:
-    ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)
+    try:
+        ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv[1:]), None, 1)
+    except IndexError:
+        ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)
 
