@@ -30,13 +30,13 @@ def makeinstallconfig():
     waitforpro = input(f"Enter Process Name to Wait for. default:{waitforprodefault}: ")
     if not waitforpro:
         waitforpro = waitforprodefault
-    ask_uac = win32ui.MessageBox("Turn off UAC. Recommended so there no UAC Prompt every login.", "Steam Deck Windows Shell Installer", win32con.MB_YESNO)
-    if ask_uac == win32con.IDYES:
-        uacoff = "True"
-    elif ask_uac == win32con.IDNO:
-        uacoff = "False"
+    ask_uac_prompt = win32ui.MessageBox("Turn off UAC Prompt. Recommended so there no UAC Prompt every login.", "Steam Deck Windows Shell Installer", win32con.MB_YESNO)
+    if ask_uac_prompt == win32con.IDYES:
+        uacpromptoff = "True"
+    elif ask_uac_prompt == win32con.IDNO:
+        uacpromptoff = "False"
     else:
-        uacoff = "True"
+        uacpromptoff = "True"
     ask_if_add_defender_Exclusion = win32ui.MessageBox("Add Defender Exclusion. Recommended so the Pyinstaller Executables dont get Flagged Because of Using the pre-compiled bootloader", "Steam Deck Windows Shell Installer", win32con.MB_YESNO)
     if ask_if_add_defender_Exclusion == win32con.IDYES:
         AddExclusion = "True"
@@ -52,7 +52,7 @@ def makeinstallconfig():
 
     config_file.set("Install", "gitrepo", gitrepo)
     config_file.set("Install", "installdir", installdir)
-    config_file.set("Install", "uacoff", uacoff)
+    config_file.set("Install", "uacpromptoff", uacpromptoff)
     config_file.set("Install", "AddExclusion", AddExclusion)
     
 

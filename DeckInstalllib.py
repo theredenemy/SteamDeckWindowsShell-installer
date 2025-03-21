@@ -51,14 +51,16 @@ def install(installconfig):
     waitforpro = config['SteamWindowsShell']['waitforpro']
     gitrepo = config['Install']['gitrepo']
     installdir = config['Install']['installdir']
-    uacoff = config['Install']['uacoff']
+    uacpromptoff = config['Install']['uacpromptoff']
     AddExclusion = config['Install']['AddExclusion']
     start_dir_main = subprocess.getoutput('echo %cd%')
     start_dir = rf'{start_dir_main}'
     start_dir = start_dir.replace('\\', '/')
     filename = os.path.basename(sys.executable)
     reboot = 0
-    
+    if not os.path.isfile(installconfig) == True:
+        print("NO FILE")
+        return
     # Start Install
     print("Starting Installation")
     time.sleep(3)
@@ -83,13 +85,11 @@ def install(installconfig):
         print("Installing Python")
         os.system(f"{python_installer} /passive PrependPath=1 InstallAllUsers=1")
         reboot = 1
-    if uacoff == "True":
-        print("Disabling UAC")
+    if uacpromptoff == "True":
+        print("Disabling UAC Prompt")
         key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System", 0, winreg.KEY_SET_VALUE)
-        winreg.SetValueEx(key, "EnableLUA", 0, winreg.REG_DWORD, 0)
+        winreg.SetValueEx(key, "ConsentPromptBehaviorAdmin", 0, winreg.REG_DWORD, 0)
         winreg.CloseKey(key)
-        #os.system("reg delete HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System /v EnableLUA /f")
-        #os.system("reg add HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System /v EnableLUA /t REG_DWORD /d 0 /f")
     time.sleep(3)
     if os.path.isdir(installdir) == True:
         shutil.rmtree(installdir)
@@ -171,7 +171,7 @@ def install(installconfig):
     config_file.set("SteamWindowsShell", "ClientExeArg", ClientExeArg)
     config_file.set("SteamWindowsShell", "waitforpro", waitforpro)
 
-    with open(rf"SteamWinShellconfig.ini", 'w') as configfileObj:
+    with open(rf"{installdir}/SteamWinShellconfig.ini", 'w') as configfileObj:
         config_file.write(configfileObj)
         configfileObj.flush()
         configfileObj.close()
