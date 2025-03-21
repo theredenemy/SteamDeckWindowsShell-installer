@@ -175,8 +175,6 @@ def install(installconfig):
         config_file.write(configfileObj)
         configfileObj.flush()
         configfileObj.close()
-    time.sleep(2)
-    shutil.move("SteamWinShellconfig.ini", f"{installdir}\\SteamWinShellconfig.ini")
     time.sleep(3)
     setshellkey.SetAsShell(f"{installdir}/shell.exe")
     time.sleep(2)
