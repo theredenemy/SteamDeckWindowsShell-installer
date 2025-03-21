@@ -38,6 +38,7 @@ def install(installconfig):
     import subprocess
     import setshellkey
     import sys
+    import winreg
     # Set Variables
     installerfiles_dir = "installerfiles"
     python_install_url = "https://www.python.org/ftp/python/3.13.0/python-3.13.0-amd64.exe"
@@ -52,7 +53,7 @@ def install(installconfig):
     installdir = config['Install']['installdir']
     uacoff = config['Install']['uacoff']
     AddExclusion = config['Install']['AddExclusion']
-    start_dir_main = subprocess.getoutput('echo "%cd%"')
+    start_dir_main = subprocess.getoutput('echo %cd%')
     start_dir = rf'{start_dir_main}'
     start_dir = start_dir.replace('\\', '/')
     filename = os.path.basename(sys.executable)
@@ -83,8 +84,11 @@ def install(installconfig):
         reboot = 1
     if uacoff == "True":
         print("Disabling UAC")
-        os.system("reg delete HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System /v EnableLUA /f")
-        os.system("reg add HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System /v EnableLUA /t REG_DWORD /d 0 /f")
+        key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System", 0, winreg.KEY_SET_VALUE)
+        winreg.SetValueEx(key, "EnableLUA", 0, winreg.REG_DWORD, 0)
+        winreg.CloseKey(key)
+        #os.system("reg delete HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System /v EnableLUA /f")
+        #os.system("reg add HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System /v EnableLUA /t REG_DWORD /d 0 /f")
     time.sleep(3)
     if os.path.isdir(installdir) == True:
         shutil.rmtree(installdir)
