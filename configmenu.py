@@ -9,7 +9,7 @@ def makeinstallconfig():
     ClientExedefault = "steam.exe"
     ClientExeArgdefault = "-noverifyfiles -gamepadui"
     waitforprodefault = "steamwebhelper.exe"
-    print("Welcome Text")
+    print("Welcome to SteamDeckWindowsShell Installer")
     gitrepo = input(f"Enter the Git Repo to clone for SteamDeckWindowsShell. default:{gitrepodefault}: ")
     if not gitrepo:
         gitrepo = gitrepodefault
