@@ -2,6 +2,7 @@
 /__pycache__
 /build
 /dist
+/Compiling_venv
 SteamDeckShellInstall.ini
 test.py
 test2.py
