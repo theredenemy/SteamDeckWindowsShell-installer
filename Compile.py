@@ -22,7 +22,6 @@ if os.path.isdir(venvdir) == False:
     
     f = open("make_venv.bat", "w")
     makevenvbat = f'''python -m venv {venvdir}
-    cls
     call {venvdir}/Scripts/activate.bat
     python -m pip install --upgrade pip
     pip install -r requirements.txt
@@ -31,6 +30,9 @@ if os.path.isdir(venvdir) == False:
     f.close()
     os.system("make_venv.bat")
 
+if os.path.isdir("Windows-64bit-intel") == True:
+    shutil.rmtree(f"{venvdir}\\Lib\\site-packages\\PyInstaller\\bootloader\\Windows-64bit-intel")
+    os.system(f"robocopy Windows-64bit-intel {venvdir}\\Lib\\site-packages\\PyInstaller\\bootloader\\Windows-64bit-intel /MIR")
 f = open("load_venv.bat", "w" )
 loadvenvbat = f'''call {venvdir}/Scripts/activate.bat
 start /wait cmd.exe /c "pyinstaller main.py --onefile "'''

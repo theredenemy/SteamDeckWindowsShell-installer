@@ -3,6 +3,7 @@
 /build
 /dist
 /Compiling_venv
+/Windows-64bit-intel
 SteamDeckShellInstall.ini
 test.py
 test2.py
