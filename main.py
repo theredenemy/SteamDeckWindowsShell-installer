@@ -34,11 +34,10 @@ if is_admin == True:
         DeckInstalllib.install("SteamDeckShellInstall.ini")
 
 else:
-    try:
-        if pathlib.Path(__file__).suffix == ".py":
+    if pathlib.Path(__file__).suffix == ".py":
             ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)
-        else:
-            ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv[1:]), None, 1)
+    try:
+        ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv[1:]), None, 1)
     except IndexError:
         ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)
 
