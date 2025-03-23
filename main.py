@@ -1,7 +1,6 @@
 import ctypes, os
 import sys
-import time
-import subprocess
+import pathlib
 try:
     is_admin = os.getuid() == 0
 except AttributeError:
@@ -36,7 +35,10 @@ if is_admin == True:
 
 else:
     try:
-        ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv[1:]), None, 1)
+        if pathlib.Path(__file__).suffix == ".py":
+            ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)
+        else:
+            ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv[1:]), None, 1)
     except IndexError:
         ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)
 
