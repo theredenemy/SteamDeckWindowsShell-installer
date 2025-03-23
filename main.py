@@ -1,6 +1,7 @@
 import ctypes, os
 import sys
 import pathlib
+file_extension = pathlib.Path(sys.argv[0]).suffix
 try:
     is_admin = os.getuid() == 0
 except AttributeError:
@@ -34,10 +35,12 @@ if is_admin == True:
         DeckInstalllib.install("SteamDeckShellInstall.ini")
 
 else:
-    if pathlib.Path(__file__).suffix == ".py":
-        ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)
     try:
-        ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv[1:]), None, 1)
+        if file_extension == ".py":
+            ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)
+        else:
+            ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv[1:]), None, 1)
+
     except IndexError:
         ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)
 
