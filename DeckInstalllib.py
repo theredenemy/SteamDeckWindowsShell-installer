@@ -42,7 +42,6 @@ def install(installconfig):
     # Set Variables
     installerfiles_dir = "installerfiles"
     python_install_url = "https://www.python.org/ftp/python/3.13.0/python-3.13.0-amd64.exe"
-    git_install_url = DeckInstalllib.get_url("git-for-windows/git", "exe", "64-bit")
     gitrepodirname = "steam_deck_shell"
     config = configHelper.read_config(installconfig)
     ClientDir = config['SteamWindowsShell']['ClientDir']
@@ -75,6 +74,7 @@ def install(installconfig):
     installer_directory = subprocess.getoutput('echo %cd%')
     if not shutil.which("git"):
         print("Downloading Git")
+        git_install_url = DeckInstalllib.get_url("git-for-windows/git", "exe", "64-bit")
         git_installer = DeckInstalllib.download_file(git_install_url,"git_install.exe")
         print("Installing Git")
         os.system(f"{git_installer} /SILENT")
