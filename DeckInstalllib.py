@@ -41,7 +41,7 @@ def install(installconfig):
     import winreg
     # Set Variables
     installerfiles_dir = "installerfiles"
-    python_install_url = "https://www.python.org/ftp/python/3.13.0/python-3.13.0-amd64.exe"
+    python_install_url = "https://www.python.org/ftp/python/3.13.3/python-3.13.3-amd64.exe"
     gitrepodirname = "steam_deck_shell"
     config = configHelper.read_config(installconfig)
     ClientDir = config['SteamWindowsShell']['ClientDir']
